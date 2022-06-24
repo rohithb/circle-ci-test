@@ -2,6 +2,11 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
+parameters:
+  run_job2:
+    type: boolean
+    default: false
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
@@ -18,9 +23,21 @@ jobs:
           name: "Say hello"
           command: "echo Hello, World!"
 
+  job2:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - run:
+          name: "Say hello from job 2"
+          command: "echo Hello, World from Job 2!"
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
   say-hello-workflow:
     jobs:
       - say-hello
+  say-hello-workflow2:
+    when: << pipeline.parameters.run_job2 >>
+    jobs:
+      - job2
