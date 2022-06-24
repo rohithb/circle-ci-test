@@ -7,6 +7,12 @@ parameters:
     type: boolean
     default: false
 
+trunk_filters: &trunk_filters
+  filters:
+    branches:
+      only:
+        - main
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
@@ -37,6 +43,7 @@ workflows:
   say-hello-workflow:
     jobs:
       - say-hello
+        <<: *trunk_filters
   say-hello-workflow2:
     when: << pipeline.parameters.run_job2 >>
     jobs:
