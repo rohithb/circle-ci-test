@@ -42,7 +42,7 @@ jobs:
 workflows:
   say-hello-workflow:
     jobs:
-      - say-hello
+      - say-hello:
         <<: *trunk_filters
   say-hello-workflow2:
     when: << pipeline.parameters.run_job2 >>
