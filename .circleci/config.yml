@@ -3,7 +3,7 @@
 version: 2.1
 
 parameters:
-  run_job2:
+  manual_deploy_to_dev:
     type: boolean
     default: false
 
@@ -41,10 +41,13 @@ jobs:
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
   say-hello-workflow:
+    unless: << pipeline.parameters.manual_deploy_to_dev >>
     jobs:
       - say-hello:
+        name: say-hello
         <<: *trunk_filters
-  say-hello-workflow2:
-    when: << pipeline.parameters.run_job2 >>
+
+  manual-deploy-to-dev:
+    when: << pipeline.parameters.manual_deploy_to_dev >>
     jobs:
       - job2
