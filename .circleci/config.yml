@@ -44,8 +44,12 @@ workflows:
     unless: << pipeline.parameters.manual_deploy_to_dev >>
     jobs:
       - say-hello:
-        name: say-hello
-        <<: *trunk_filters
+          name: say-hello
+          <<: *trunk_filters
+      - job2:
+          requires:
+            - say-hello
+          <<: *trunk_filters
 
   manual-deploy-to-dev:
     when: << pipeline.parameters.manual_deploy_to_dev >>
