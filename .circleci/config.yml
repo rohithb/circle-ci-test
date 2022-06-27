@@ -13,6 +13,20 @@ trunk_filters: &trunk_filters
       only:
         - main
 
+tag_filters: &tag_filters
+  filters:
+    branches:
+      ignore: /.*/
+    tags:
+      only:
+        - /^v.*/
+
+pr_filters: &pr_filters
+  filters:
+    branches:
+      ignore:
+        - main
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
@@ -40,17 +54,22 @@ jobs:
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  say-hello-workflow:
+  trunk-workflow:
     unless: << pipeline.parameters.manual_deploy_to_dev >>
     jobs:
       - say-hello:
           name: say-hello
           <<: *trunk_filters
+  pr-workflow-workflow:
+    unless: << pipeline.parameters.manual_deploy_to_dev >>
+    jobs:
       - job2:
-          requires:
-            - say-hello
-          <<: *trunk_filters
-
+          <<: *pr_filters
+  tag-workflow-workflow:
+    unless: << pipeline.parameters.manual_deploy_to_dev >>
+    jobs:
+      - job2:
+          <<: *tag_filters
   manual-deploy-to-dev:
     when: << pipeline.parameters.manual_deploy_to_dev >>
     jobs:
